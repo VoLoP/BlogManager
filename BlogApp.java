@@ -1,4 +1,5 @@
 import java.util.ArrayList;
+import java.util.InputMismatchException;
 import java.util.Scanner;
 
 // Class representing a single blog post
@@ -62,39 +63,51 @@ class Blog {
 // Main class to run the blog application
 public class BlogApp {
     private static Blog blog = new Blog();
-    private static Scanner scanner = new Scanner(System.in);
 
     public static void main(String[] args) {
-        int choice;
-        do {
-            System.out.println("1. Add Blog Post");
-            System.out.println("2. View Blog Posts");
-            System.out.println("3. Delete Blog Post");
-            System.out.println("4. Exit");
-            System.out.print("Enter your choice: ");
-            choice = scanner.nextInt();
-            scanner.nextLine(); // Consume newline
+        try (Scanner scanner = new Scanner(System.in)) {
+            int choice;
+            do {
+                System.out.println("1. Add Blog Post");
+                System.out.println("2. View Blog Posts");
+                System.out.println("3. Delete Blog Post");
+                System.out.println("4. Exit");
+                System.out.print("Enter your choice: ");
+                choice = getUserChoice(scanner);
 
-            switch (choice) {
-                case 1:
-                    addBlogPost();
-                    break;
-                case 2:
-                    blog.viewPosts();
-                    break;
-                case 3:
-                    deleteBlogPost();
-                    break;
-                case 4:
-                    System.out.println("Exiting the application.");
-                    break;
-                default:
-                    System.out.println("Invalid choice. Please try again.");
-            }
-        } while (choice != 4);
+                switch (choice) {
+                    case 1:
+                        addBlogPost(scanner);
+                        break;
+                    case 2:
+                        blog.viewPosts();
+                        break;
+                    case 3:
+                        deleteBlogPost(scanner);
+                        break;
+                    case 4:
+                        System.out.println("Exiting the application.");
+                        break;
+                    default:
+                        System.out.println("Invalid choice. Please try again.");
+                }
+            } while (choice != 4);
+        }
     }
 
-    private static void addBlogPost() {
+    private static int getUserChoice(Scanner scanner) {
+        int choice = -1;
+        try {
+            choice = scanner.nextInt();
+        } catch (InputMismatchException e) {
+            System.out.println("Invalid input. Please enter a number.");
+        } finally {
+            scanner.nextLine(); // Consume newline
+        }
+        return choice;
+    }
+
+    private static void addBlogPost(Scanner scanner) {
         System.out.print("Enter post title: ");
         String title = scanner.nextLine();
         System.out.print("Enter post content: ");
@@ -103,9 +116,15 @@ public class BlogApp {
         blog.addPost(post);
     }
 
-    private static void deleteBlogPost() {
+    private static void deleteBlogPost(Scanner scanner) {
         System.out.print("Enter post number to delete: ");
-        int postNumber = scanner.nextInt();
-        blog.deletePost(postNumber - 1); // Convert to zero-based index
+        try {
+            int postNumber = scanner.nextInt();
+            blog.deletePost(postNumber - 1); // Convert to zero-based index
+        } catch (InputMismatchException e) {
+            System.out.println("Invalid input. Please enter a valid post number.");
+        } finally {
+            scanner.nextLine(); // Consume newline
+        }
     }
 }
