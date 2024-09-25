@@ -60,31 +60,52 @@ class Blog {
 }
 
 // Main class to run the blog application
-public class BlogApp 
-{ 
-    private ArrayList<BlogPost> posts;
+public class BlogApp {
+    private static Blog blog = new Blog();
+    private static Scanner scanner = new Scanner(System.in);
 
-    public Blog() {
-        posts = new ArrayList<>();
+    public static void main(String[] args) {
+        int choice;
+        do {
+            System.out.println("1. Add Blog Post");
+            System.out.println("2. View Blog Posts");
+            System.out.println("3. Delete Blog Post");
+            System.out.println("4. Exit");
+            System.out.print("Enter your choice: ");
+            choice = scanner.nextInt();
+            scanner.nextLine(); // Consume newline
+
+            switch (choice) {
+                case 1:
+                    addBlogPost();
+                    break;
+                case 2:
+                    blog.viewPosts();
+                    break;
+                case 3:
+                    deleteBlogPost();
+                    break;
+                case 4:
+                    System.out.println("Exiting the application.");
+                    break;
+                default:
+                    System.out.println("Invalid choice. Please try again.");
+            }
+        } while (choice != 4);
     }
 
-    public void addPost(BlogPost post) {
-        posts.add(post);
-        System.out.println("Post added successfully!");
+    private static void addBlogPost() {
+        System.out.print("Enter post title: ");
+        String title = scanner.nextLine();
+        System.out.print("Enter post content: ");
+        String content = scanner.nextLine();
+        BlogPost post = new BlogPost(title, content);
+        blog.addPost(post);
     }
 
-    public void viewPosts() {
-        if (posts.isEmpty()) {
-            System.out.println("No blog posts available.");
-            return;
-        }
-        for (int i = 0; i < posts.size(); i++) {
-            System.out.println("Post " + (i + 1) + ":");
-            System.out.println(posts.get(i));
-        }
+    private static void deleteBlogPost() {
+        System.out.print("Enter post number to delete: ");
+        int postNumber = scanner.nextInt();
+        blog.deletePost(postNumber - 1); // Convert to zero-based index
     }
 }
-
-private static void addBlogPost() {}
-
-private static void deleteBlogPost() {}
