@@ -60,4 +60,12 @@ class Blog {
 }
 
 // Main class to run the blog application
-public class BlogApp { }
+public class BlogApp 
+{ 
+    private String title;
+    private String content;
+}
+
+private static void addBlogPost() {}
+
+private static void deleteBlogPost() {}
