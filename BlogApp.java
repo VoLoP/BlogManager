@@ -1,68 +1,10 @@
-import java.util.ArrayList;
+package BlogManager;
+
 import java.util.InputMismatchException;
 import java.util.Scanner;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-// Class representing a single blog post
-class BlogPost {
-    private String title;
-    private String content;
-
-    public BlogPost(String title, String content) {
-        this.title = title;
-        this.content = content;
-    }
-
-    public String getTitle() {
-        return title;
-    }
-
-    public String getContent() {
-        return content;
-    }
-
-    @Override
-    public String toString() {
-        return "Title: " + title + "\nContent: " + content + "\n";
-    }
-}
-
-// Class managing the list of blog posts
-class Blog {
-    private ArrayList<BlogPost> posts;
-    private static final Logger logger = Logger.getLogger(Blog.class.getName());
-
-    public Blog() {
-        posts = new ArrayList<>();
-    }
-
-    public void addPost(BlogPost post) {
-        posts.add(post);
-        logger.log(Level.INFO, "Post added successfully!");
-    }
-
-    public void viewPosts() {
-        if (posts.isEmpty()) {
-            logger.log(Level.INFO, "No blog posts available.");
-            return;
-        }
-        for (int i = 0; i < posts.size(); i++) {
-            logger.log(Level.INFO, "Post {0}:\n{1}", new Object[]{i + 1, posts.get(i)});
-        }
-    }
-
-    public void deletePost(int index) {
-        if (index < 0 || index >= posts.size()) {
-            logger.log(Level.WARNING, "Invalid post index.");
-            return;
-        }
-        posts.remove(index);
-        logger.log(Level.INFO, "Post deleted successfully!");
-    }
-}
-
-// Main class to run the blog application
 public class BlogApp {
     private static Blog blog = new Blog();
     private static final Logger logger = Logger.getLogger(BlogApp.class.getName());
