@@ -1,6 +1,8 @@
 import java.util.ArrayList;
 import java.util.InputMismatchException;
 import java.util.Scanner;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 // Class representing a single blog post
 class BlogPost {
@@ -29,6 +31,7 @@ class BlogPost {
 // Class managing the list of blog posts
 class Blog {
     private ArrayList<BlogPost> posts;
+    private static final Logger logger = Logger.getLogger(Blog.class.getName());
 
     public Blog() {
         posts = new ArrayList<>();
@@ -36,43 +39,39 @@ class Blog {
 
     public void addPost(BlogPost post) {
         posts.add(post);
-        System.out.println("Post added successfully!");
+        logger.log(Level.INFO, "Post added successfully!");
     }
 
     public void viewPosts() {
         if (posts.isEmpty()) {
-            System.out.println("No blog posts available.");
+            logger.log(Level.INFO, "No blog posts available.");
             return;
         }
         for (int i = 0; i < posts.size(); i++) {
-            System.out.println("Post " + (i + 1) + ":");
-            System.out.println(posts.get(i));
+            logger.log(Level.INFO, "Post {0}:\n{1}", new Object[]{i + 1, posts.get(i)});
         }
     }
 
     public void deletePost(int index) {
         if (index < 0 || index >= posts.size()) {
-            System.out.println("Invalid post index.");
+            logger.log(Level.WARNING, "Invalid post index.");
             return;
         }
         posts.remove(index);
-        System.out.println("Post deleted successfully!");
+        logger.log(Level.INFO, "Post deleted successfully!");
     }
 }
 
 // Main class to run the blog application
 public class BlogApp {
     private static Blog blog = new Blog();
+    private static final Logger logger = Logger.getLogger(BlogApp.class.getName());
 
     public static void main(String[] args) {
         try (Scanner scanner = new Scanner(System.in)) {
             int choice;
             do {
-                System.out.println("1. Add Blog Post");
-                System.out.println("2. View Blog Posts");
-                System.out.println("3. Delete Blog Post");
-                System.out.println("4. Exit");
-                System.out.print("Enter your choice: ");
+                displayMenu();
                 choice = getUserChoice(scanner);
 
                 switch (choice) {
@@ -86,13 +85,21 @@ public class BlogApp {
                         deleteBlogPost(scanner);
                         break;
                     case 4:
-                        System.out.println("Exiting the application.");
+                        logger.log(Level.INFO, "Exiting the application.");
                         break;
                     default:
-                        System.out.println("Invalid choice. Please try again.");
+                        logger.log(Level.WARNING, "Invalid choice. Please try again.");
                 }
             } while (choice != 4);
         }
+    }
+
+    private static void displayMenu() {
+        System.out.println("1. Add Blog Post");
+        System.out.println("2. View Blog Posts");
+        System.out.println("3. Delete Blog Post");
+        System.out.println("4. Exit");
+        System.out.print("Enter your choice: ");
     }
 
     private static int getUserChoice(Scanner scanner) {
@@ -100,7 +107,7 @@ public class BlogApp {
         try {
             choice = scanner.nextInt();
         } catch (InputMismatchException e) {
-            System.out.println("Invalid input. Please enter a number.");
+            logger.log(Level.WARNING, "Invalid input. Please enter a number.");
         } finally {
             scanner.nextLine(); // Consume newline
         }
@@ -122,7 +129,7 @@ public class BlogApp {
             int postNumber = scanner.nextInt();
             blog.deletePost(postNumber - 1); // Convert to zero-based index
         } catch (InputMismatchException e) {
-            System.out.println("Invalid input. Please enter a valid post number.");
+            logger.log(Level.WARNING, "Invalid input. Please enter a valid post number.");
         } finally {
             scanner.nextLine(); // Consume newline
         }
