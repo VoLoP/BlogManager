@@ -62,8 +62,27 @@ class Blog {
 // Main class to run the blog application
 public class BlogApp 
 { 
-    private String title;
-    private String content;
+    private ArrayList<BlogPost> posts;
+
+    public Blog() {
+        posts = new ArrayList<>();
+    }
+
+    public void addPost(BlogPost post) {
+        posts.add(post);
+        System.out.println("Post added successfully!");
+    }
+
+    public void viewPosts() {
+        if (posts.isEmpty()) {
+            System.out.println("No blog posts available.");
+            return;
+        }
+        for (int i = 0; i < posts.size(); i++) {
+            System.out.println("Post " + (i + 1) + ":");
+            System.out.println(posts.get(i));
+        }
+    }
 }
 
 private static void addBlogPost() {}
